@@ -1,5 +1,6 @@
 package com.example.appvideojuegos;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
+    Button button2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,5 +28,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error al crear la base de datos", Toast.LENGTH_SHORT).show();
             }
         });
+
+        button2 = this.findViewById(R.id.Iniciar);
+        button2.setOnClickListener(v -> {
+            Intent i = new Intent(this,LoginUsuario.class);
+            startActivity(i);
+        });
+
     }
 }
