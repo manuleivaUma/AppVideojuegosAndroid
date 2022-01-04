@@ -2,12 +2,16 @@ package com.example.appvideojuegos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.Serializable;
+import java.util.Map;
 
 public class LoginUsuario extends AppCompatActivity {
 
@@ -28,6 +32,21 @@ public class LoginUsuario extends AppCompatActivity {
         button1.setOnClickListener(v -> {
             Intent i = new Intent(this,RegistroUsuario.class);
             startActivity(i);
+        });
+
+        button2.setOnClickListener(v -> {
+
+            DbUsuario dbUsuario = new DbUsuario(LoginUsuario.this);
+            Map<String,String> mapaid = dbUsuario.buscarUsuario(txEmail.getText().toString(),txPassword.getText().toString());
+            if (!mapaid.get("id").equals("-1")){
+                Toast.makeText(LoginUsuario.this, "Usuario válido", Toast.LENGTH_SHORT).show();
+                Intent i2 = new Intent(this,ListaUsuario.class);
+                i2.putExtra("Mapa", (Serializable) mapaid);
+                startActivity(i2);
+            }else{
+                Toast.makeText(LoginUsuario.this, "Usuario no válido", Toast.LENGTH_SHORT).show();
+            }
+
         });
 
 

@@ -16,6 +16,9 @@
             android:name=".LoginUsuario"
             android:exported="false" />
         <activity
+            android:name=".ListaUsuario"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
