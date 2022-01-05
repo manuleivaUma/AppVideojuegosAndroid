@@ -9,4 +9,18 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Menu (opciones) -->
+    <string name="lista">Mi lista</string>
+    <string name="buscar_juegos_menu">Buscar videojuego</string>
+
+    <!-- Buscar Videojuegos -->
+    <string name="buscar_juegos">Buscar juegos:</string>
+    <string name="nombre_juego_hint">Nombre del juego</string>
+    <string name="buscar">Buscar</string>
+    <string name="resBusqueda">Resultados de la búsqueda:</string>
+    <string name="juegos_famosos">Juegos famosos:</string>
+
+    <!-- Popup -->
+    <string name="valoracion_popup">Valoración</string>
 </resources>

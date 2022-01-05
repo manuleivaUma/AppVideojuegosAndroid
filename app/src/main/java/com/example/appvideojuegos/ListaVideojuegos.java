@@ -1,47 +1,36 @@
 package com.example.appvideojuegos;
 
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.Toast;
-import androidx.appcompat.widget.Toolbar;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
-    Button button;
-    Button button2;
+import java.util.ArrayList;
+
+public class ListaVideojuegos extends AppCompatActivity {
+
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_lista_videojuegos);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        listView = this.findViewById(R.id.listView);
 
-        button = this.findViewById(R.id.crear);
-        button.setOnClickListener(v -> {
-            DbHelper dbHelper = new DbHelper(MainActivity.this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            if (db != null) {
-                Toast.makeText(MainActivity.this, "Base de datos creada", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, "Error al crear la base de datos", Toast.LENGTH_SHORT).show();
-            }
-        });
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("hola");
+        arrayList.add("soy");
+        arrayList.add("una");
+        arrayList.add("lista");
 
-        button2 = this.findViewById(R.id.Iniciar);
-        button2.setOnClickListener(v -> {
-            Intent i = new Intent(this,LoginUsuario.class);
-            startActivity(i);
-        });
-
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayList);
+        listView.setAdapter(arrayAdapter);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
