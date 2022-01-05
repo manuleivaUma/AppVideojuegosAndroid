@@ -41,9 +41,6 @@ public class ListaVideojuegos extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-            case R.id.listaPrincipal:
-                mostrarLista();
-                return true;
             case R.id.buscarVideojuego:
                 mostrarBuscar();
                 return true;

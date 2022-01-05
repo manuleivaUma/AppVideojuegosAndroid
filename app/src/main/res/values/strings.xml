@@ -14,6 +14,11 @@
     <string name="lista">Mi lista</string>
     <string name="buscar_juegos_menu">Buscar videojuego</string>
 
+    <!-- Videojuego_item -->
+    <string name="nota_item">Nota:</string>
+    <string name="nombre_item">Nombre:</string>
+    <string name="fecha_item">Fecha:</string>
+
     <!-- Buscar Videojuegos -->
     <string name="buscar_juegos">Buscar juegos:</string>
     <string name="nombre_juego_hint">Nombre del juego</string>
