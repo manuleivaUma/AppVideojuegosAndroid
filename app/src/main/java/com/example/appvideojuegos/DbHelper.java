@@ -20,10 +20,10 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_USUARIO + "(" +
                 "id INTEGER PRIMARY KEY ," +
-                "email TEXT NOT NULL UNIQUE," +
-                "password TEXT NOT NULL," +
-                "nombre TEXT NOT NULL," +
-                "apellido TEXT NOT NULL)");
+                "email STRING NOT NULL UNIQUE," +
+                "password STRING NOT NULL," +
+                "nombre STRING NOT NULL," +
+                "apellido STRING NOT NULL)");
     }
 
     @Override

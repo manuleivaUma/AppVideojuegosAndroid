@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.Nullable;
 
+import java.time.Clock;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class DbUsuario extends DbHelper {
 
         if(fila.moveToFirst()){
             id = fila.getInt(0);
+            System.out.println(id);
         }
 
         Map<String, String>
@@ -44,11 +46,14 @@ public class DbUsuario extends DbHelper {
         DbHelper dbHelper = new DbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int idint = Integer.parseInt(id);
-        System.out.println(idint);
+        //System.out.println(idint);
         Cursor fila = db.rawQuery("Select email,nombre,apellido from t_usuario where id = '" + idint + "'" ,null);
-        //m.put("email",fila.getString();
-        //m.put("nombre",fila.getString(1));
-        //m.put("apellido",fila.getString(2));
+
+        fila.moveToFirst();
+
+        m.put("email",fila.getString(0));
+        m.put("nombre",fila.getString(1));
+        m.put("apellido",fila.getString(2));
 
         return m;
     };

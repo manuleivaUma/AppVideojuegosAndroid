@@ -22,10 +22,13 @@ public class ListaUsuario extends AppCompatActivity {
         mapaid = (Map) getIntent().getSerializableExtra("Mapa");
         Toast.makeText(ListaUsuario.this, mapaid.get("id") , Toast.LENGTH_SHORT).show();
 
-        //DbUsuario dbUsuario = new DbUsuario(ListaUsuario.this);
-        //Map<String,String> m = dbUsuario.getDatosUsuario(mapaid.get("id"));
 
-        //TextView text=(TextView)findViewById(R.id.nombreusuario);
-        //text.setText(m.get("nombre") + m.get("apellido"));
+
+
+        DbUsuario dbUsuario = new DbUsuario(ListaUsuario.this);
+        Map<String,String> m = dbUsuario.getDatosUsuario(mapaid.get("id"));
+
+        TextView text=(TextView)findViewById(R.id.nombreusuario);
+        text.setText(m.get("nombre") + m.get("apellido"));
     }
 }
