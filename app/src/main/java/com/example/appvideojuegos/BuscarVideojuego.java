@@ -26,13 +26,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BuscarVideojuego extends AppCompatActivity {
+    Map<String,String> mapaid;
+    Integer id;
 
-    Dialog dialogo;
     Button button;
     TextView nombre;
     ListView listView;
@@ -43,6 +45,12 @@ public class BuscarVideojuego extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscar_videojuego);
 
+        mapaid= Collections
+                .singletonMap("key", "Value");
+        mapaid = (Map) getIntent().getSerializableExtra("Mapa");
+        Toast.makeText(this, mapaid.get("id") , Toast.LENGTH_SHORT).show();
+        id = Integer.parseInt(mapaid.get("id"));
+
         listView = this.findViewById(R.id.listaBuscar);
         listViewRes = this.findViewById(R.id.listaRes);
         button = this.findViewById(R.id.button);
@@ -50,7 +58,8 @@ public class BuscarVideojuego extends AppCompatActivity {
 
         // MOSTRAR JUEGOS FAMOSOS
         String url = "https://api.rawg.io/api/games?key=1dbefa6d583c4d62a1be47db82ff82ec&dates=2021-01-01,2021-12-31&ordering=-added&page_size=5";
-        StringRequest postRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -69,6 +78,7 @@ public class BuscarVideojuego extends AppCompatActivity {
         ArrayList<String> fotos = new ArrayList<>();
         ArrayList<String> fechas = new ArrayList<>();
         ArrayList<Integer> puntuaciones = new ArrayList<>();
+        ArrayList<Integer> id_juegos = new ArrayList<>();
 
         if (listaJuegos != null) {
             // Accedemos a los resultados
@@ -82,19 +92,22 @@ public class BuscarVideojuego extends AppCompatActivity {
                     String released = jsonVideojuego.getString("released");
                     String background_image = jsonVideojuego.getString("background_image");
                     int metacritic = jsonVideojuego.getString("metacritic") == "null" ? 0 : jsonVideojuego.getInt("metacritic");
+                    int id = jsonVideojuego.getInt("id");
 
                     // Añadimos a las listas correspondientes
                     nombres.add(name);
                     fotos.add(background_image);
                     puntuaciones.add(metacritic);
                     fechas.add(released);
+                    id_juegos.add(id);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         // Actualizar la listView
-        AdaptadorItems adaptador = new AdaptadorItems(this, nombres, fotos, puntuaciones, fechas);
+        AdaptadorItems adaptador = new AdaptadorItems(this, nombres, fotos, puntuaciones,
+                fechas, id_juegos, id);
         listView.setAdapter(adaptador);
     }
 
@@ -102,12 +115,14 @@ public class BuscarVideojuego extends AppCompatActivity {
         String nombre_juego = this.nombre.getText().toString();
 
         if (nombre_juego == ""){
-            Toast.makeText(this, "El nombre del juego está en blanco", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "El nombre del juego está en blanco",
+                    Toast.LENGTH_SHORT).show();
         } else {
             // TODO: Comprobar la entrada
 
             String url = "https://api.rawg.io/api/games?key=1dbefa6d583c4d62a1be47db82ff82ec&search="+nombre_juego;
-            StringRequest postRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -127,6 +142,7 @@ public class BuscarVideojuego extends AppCompatActivity {
         ArrayList<String> fotosRes = new ArrayList<>();
         ArrayList<String> fechasRes = new ArrayList<>();
         ArrayList<Integer> puntuacionesRes = new ArrayList<>();
+        ArrayList<Integer> id_juegosRes = new ArrayList<>();
 
         if (juegos != null) {
             // Accedemos a los resultados
@@ -140,19 +156,22 @@ public class BuscarVideojuego extends AppCompatActivity {
                     String released = jsonVideojuego.getString("released");
                     String background_image = jsonVideojuego.getString("background_image");
                     int metacritic = jsonVideojuego.getString("metacritic") == "null" ? 0 : jsonVideojuego.getInt("metacritic");
+                    int id = jsonVideojuego.getInt("id");
 
                     // Añadimos a las listas correspondientes
                     nombresRes.add(name);
                     fotosRes.add(background_image);
                     puntuacionesRes.add(metacritic);
                     fechasRes.add(released);
+                    id_juegosRes.add(id);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         // Actualizar la listViewRes
-        AdaptadorItems adaptador = new AdaptadorItems(this, nombresRes, fotosRes, puntuacionesRes, fechasRes);
+        AdaptadorItems adaptador = new AdaptadorItems(this, nombresRes, fotosRes,
+                puntuacionesRes, fechasRes, id_juegosRes, id);
         listViewRes.setAdapter(adaptador);
     }
 }

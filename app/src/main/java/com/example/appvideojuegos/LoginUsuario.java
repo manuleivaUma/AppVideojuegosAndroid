@@ -35,7 +35,6 @@ public class LoginUsuario extends AppCompatActivity {
         });
 
         button2.setOnClickListener(v -> {
-
             DbUsuario dbUsuario = new DbUsuario(LoginUsuario.this);
             Map<String,String> mapaid = dbUsuario.buscarUsuario(txEmail.getText().toString(),txPassword.getText().toString());
             if (!mapaid.get("id").equals("-1")){
@@ -46,7 +45,6 @@ public class LoginUsuario extends AppCompatActivity {
             }else{
                 Toast.makeText(LoginUsuario.this, "Usuario no válido", Toast.LENGTH_SHORT).show();
             }
-
         });
 
 

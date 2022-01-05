@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class ListaUsuario extends AppCompatActivity {
         Map<String,String> m = dbUsuario.getDatosUsuario(mapaid.get("id"));
 
         TextView text=(TextView)findViewById(R.id.nombreusuario);
-        text.setText(m.get("nombre") + m.get("apellido"));
+        text.setText(m.get("nombre") + " " + m.get("apellido"));
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -54,6 +55,7 @@ public class ListaUsuario extends AppCompatActivity {
 
     private void mostrarBuscar(){
         Intent intent = new Intent(this, BuscarVideojuego.class);
+        intent.putExtra("Mapa", (Serializable) mapaid);
         startActivity(intent);
     }
 }

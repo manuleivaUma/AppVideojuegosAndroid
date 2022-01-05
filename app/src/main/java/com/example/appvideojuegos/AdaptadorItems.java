@@ -28,16 +28,20 @@ public class AdaptadorItems extends ArrayAdapter<String> {
     ArrayList<String> nombres;
     ArrayList<String> fechas;
     ArrayList<Integer> puntuaciones;
-
+    ArrayList<Integer> id_juegos;
+    Integer id_usuario;
 
     public AdaptadorItems(Context context, ArrayList<String> nombres, ArrayList<String> fotos,
-                          ArrayList<Integer> puntuaciones, ArrayList<String> fechas) {
+                          ArrayList<Integer> puntuaciones, ArrayList<String> fechas,
+                          ArrayList<Integer> id_juegos, Integer id_usuario) {
         super(context, R.layout.videojuego_item, R.id.textViewNombre, nombres);
         this.context = context;
         this.fotos = fotos;
         this.nombres = nombres;
         this.puntuaciones = puntuaciones;
         this.fechas = fechas;
+        this.id_juegos = id_juegos;
+        this.id_usuario = id_usuario;
     }
 
     @Override
@@ -63,15 +67,18 @@ public class AdaptadorItems extends ArrayAdapter<String> {
         videojuegoItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Popup(v, nombres.get(position), fotos.get(position), fechas.get(position), puntuaciones.get(position));
+                Popup(v, nombres.get(position), fotos.get(position), fechas.get(position),
+                        puntuaciones.get(position), id_juegos.get(position));
             }
         });
         return videojuegoItem;
     }
 
-    public void Popup(View v, String nombre, String imagen, String fecha, Integer puntuacion){
+    public void Popup(View v, String nombre, String imagen, String fecha, Integer puntuacion,
+                      Integer id){
         TextView cerrar;
         Button añadir;
+        Boolean añadido = false;
 
         ImageView foto;
         TextView txNombre;
@@ -87,6 +94,12 @@ public class AdaptadorItems extends ArrayAdapter<String> {
         cerrar = (TextView) dialogo.findViewById(R.id.txtclose);
         añadir = (Button) dialogo.findViewById(R.id.botonPopup);
 
+        // Comprobamos si el juego esta en la lista para desactivar el boton
+        DbJuego dbJuego = new DbJuego(context);
+        long idQuery = dbJuego.comprobarJuego(id_usuario, id);
+        if (idQuery > 0){
+            añadido = true;
+        }
         txNombre.setText(nombre);
         txFecha.setText(fecha);
         txPuntuacion.setText(puntuacion.toString());
@@ -101,7 +114,31 @@ public class AdaptadorItems extends ArrayAdapter<String> {
                 dialogo.dismiss();
             }
         });
+
+        // Botón Añadir
+        if (!añadido){
+            // Añadir objeto a lista
+            añadir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    añadirJuego(id_usuario, id, "jugando", 0);
+                }
+            });
+        } else {
+            // Desactivamos el botón
+            añadir.setEnabled(false);
+        }
         dialogo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogo.show();
+    }
+
+    private void añadirJuego(Integer id_usuario, Integer id_juego, String estado, Integer valoracion){
+        DbJuego dbJuego = new DbJuego(context);
+        long idQuery = dbJuego.crearJuego(id_usuario, id_juego, estado, valoracion);
+        if (idQuery > 0){
+            Toast.makeText(context, "¡Juego añadido!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Error al registrar el juego", Toast.LENGTH_SHORT).show();
+        }
     }
 }
