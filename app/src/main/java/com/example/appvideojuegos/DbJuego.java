@@ -8,6 +8,10 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class DbJuego extends DbHelper{
 
     Context context;
@@ -50,5 +54,35 @@ public class DbJuego extends DbHelper{
             e.printStackTrace();
         }
         return idQuery;
+    }
+
+    public Map<String, ArrayList<String>> getJuegosEstadoValoracion(Integer id_usuario){
+        ArrayList<String> listaId = new ArrayList<>();
+        ArrayList<String> listaEstado = new ArrayList<>();
+        ArrayList<String> listaValoracion = new ArrayList<>();
+        Map<String, ArrayList<String>> m = new HashMap<>();
+
+        DbHelper dbHelper = new DbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT juego_id,estado,valoracion FROM " + TABLE_JUEGO +
+                " WHERE usuario_id = '" + id_usuario + "'", null);
+
+        if (!cursor.moveToFirst()){
+            return null;
+        } else {
+            // Recorremos los resultados
+            cursor.moveToFirst();
+            do {
+                Integer id = cursor.getInt(0);
+                listaId.add(id.toString());
+                listaEstado.add(cursor.getString(1));
+                Integer valoracion = cursor.getInt(2);
+                listaValoracion.add(valoracion.toString());
+            } while (cursor.moveToNext());
+        }
+        m.put("listaId", listaId);
+        m.put("listaEstado", listaEstado);
+        m.put("listaValoracion", listaValoracion);
+        return m;
     }
 }

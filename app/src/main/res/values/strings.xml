@@ -18,6 +18,8 @@
     <string name="nota_item">Nota:</string>
     <string name="nombre_item">Nombre:</string>
     <string name="fecha_item">Fecha:</string>
+    <string name="estado_item">Estado:</string>
+    <string name="nota_lista_item">Nota personal:</string>
 
     <!-- Buscar Videojuegos -->
     <string name="buscar_juegos">Buscar juegos:</string>

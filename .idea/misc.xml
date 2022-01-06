@@ -6,7 +6,7 @@
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/drawable/boton_popup.xml" value="0.2703125" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/drawable/circulo.xml" value="0.2703125" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_buscar_videojuego.xml" value="0.264" />
-        <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_lista_usuario.xml" value="0.2" />
+        <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_lista_usuario.xml" value="0.264" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_lista_videojuegos.xml" value="0.264" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_login_usuario.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
@@ -14,6 +14,7 @@
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/popup_videojuego.xml" value="0.37995824634655534" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/toolbar.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/videojuego_item.xml" value="0.536" />
+        <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/videojuego_lista_item.xml" value="0.536" />
         <entry key="..\:/Users/Fran/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/menu/menu_main.xml" value="0.264" />
         <entry key="..\:/Users/manul/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_lista_usuario.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/manul/Documents/GitHub/AppVideojuegosAndroid/app/src/main/res/layout/activity_login_usuario.xml" value="0.264" />

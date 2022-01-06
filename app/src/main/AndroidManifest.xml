@@ -13,15 +13,8 @@
         android:theme="@style/Theme.AppVideojuegos">
         <activity
             android:name=".BuscarVideojuego"
-            android:exported="false"
-            android:parentActivityName=".ListaVideojuegos">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListaVideojuegos" />
+            android:exported="false">
         </activity>
-        <activity
-            android:name=".ListaVideojuegos"
-            android:exported="false" />
         <activity
             android:name=".RegistroUsuario"
             android:exported="false" />

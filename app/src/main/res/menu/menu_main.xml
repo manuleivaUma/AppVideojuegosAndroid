@@ -4,6 +4,9 @@
     tools:context="com.example.appvideojuegos.MainActivity">
 
     <item
+        android:id="@+id/listaVideojuegos"
+        android:title="@string/lista" />
+    <item
         android:id="@+id/buscarVideojuego"
         android:title="@string/buscar_juegos_menu" />
 </menu>

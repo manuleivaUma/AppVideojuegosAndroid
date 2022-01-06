@@ -59,6 +59,8 @@ public class AdaptadorItems extends ArrayAdapter<String> {
         // Definimos los valores
         Picasso.get()
                 .load(fotos.get(position))
+                .fit()
+                .centerCrop()
                 .error(R.mipmap.ic_launcher_round)
                 .into(holder.foto);
         holder.nombre.setText(nombres.get(position));
@@ -121,7 +123,7 @@ public class AdaptadorItems extends ArrayAdapter<String> {
             añadir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    añadirJuego(id_usuario, id, "jugando", 0, dialogo);
+                    añadirJuego(id_usuario, id, "Jugando", 0, dialogo);
                 }
             });
         } else {

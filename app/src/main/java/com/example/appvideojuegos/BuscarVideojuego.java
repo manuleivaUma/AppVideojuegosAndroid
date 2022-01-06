@@ -1,10 +1,14 @@
 package com.example.appvideojuegos;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -173,5 +178,38 @@ public class BuscarVideojuego extends AppCompatActivity {
         AdaptadorItems adaptador = new AdaptadorItems(this, nombresRes, fotosRes,
                 puntuacionesRes, fechasRes, id_juegosRes, id);
         listViewRes.setAdapter(adaptador);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.buscarVideojuego:
+                mostrarBuscar();
+                return true;
+            case R.id.listaVideojuegos:
+                mostrarLista();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void mostrarBuscar(){
+        Intent intent = new Intent(this, BuscarVideojuego.class);
+        intent.putExtra("Mapa", (Serializable) mapaid);
+        startActivity(intent);
+        finish();
+    }
+
+    private void mostrarLista(){
+        Intent intent = new Intent(this, ListaUsuario.class);
+        intent.putExtra("Mapa", (Serializable) mapaid);
+        startActivity(intent);
+        finish();
     }
 }
