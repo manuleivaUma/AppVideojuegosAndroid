@@ -30,4 +30,7 @@
 
     <!-- Popup -->
     <string name="valoracion_popup">Valoración</string>
+    <string name="valoracion_personal_popup">Nota\n personal</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="añadir">Añadir a la lista</string>
 </resources>

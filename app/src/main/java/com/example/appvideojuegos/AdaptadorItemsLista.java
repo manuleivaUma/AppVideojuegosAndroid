@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,9 +71,58 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         videojuegoItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Seleccionado " + id_juegos.get(position), Toast.LENGTH_SHORT).show();
+                Popup(v, nombres.get(position), fotos.get(position), estados.get(position),
+                        puntuaciones.get(position), val_personales.get(position), id_usuario);
             }
         });
         return videojuegoItem;
+    }
+
+    public void Popup(View v, String nombre, String imagen, String estado, Integer puntuacion,
+                      Integer val_personal, Integer id){
+        TextView cerrar;
+        Button eliminar;
+        Boolean eliminado = false;
+
+        ImageView foto;
+        TextView txNombre;
+        Spinner spEstado;
+        TextView txPuntuacion;
+        TextView txVal_personal;
+
+        dialogo = new Dialog(this.getContext());
+        dialogo.setContentView(R.layout.popup_lista);
+        foto = dialogo.findViewById(R.id.imageViewPopup);
+        txNombre = dialogo.findViewById(R.id.NombrePopup);
+        spEstado = dialogo.findViewById(R.id.spinnerPopup);
+        txPuntuacion = dialogo.findViewById(R.id.puntuacionPopup);
+        txVal_personal = dialogo.findViewById(R.id.puntuacionPersonalPopup);
+        cerrar = dialogo.findViewById(R.id.txtclose);
+        eliminar = dialogo.findViewById(R.id.botonPopup);
+
+        txNombre.setText(nombre);
+        txPuntuacion.setText(puntuacion.toString());
+        txVal_personal.setText(val_personal.toString());
+        Picasso.get()
+                .load(imagen)
+                .error(R.mipmap.ic_launcher_round)
+                .into(foto);
+        // Spinner
+        String[] estados = {"Completado", "Jugando", "Deseado"};
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(context,
+                R.layout.spinner_item, estados);
+        adaptador.setDropDownViewResource(R.layout.spinner_item);
+        spEstado.setAdapter(adaptador);
+        spEstado.setSelection(adaptador.getPosition(estado));
+
+        cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogo.dismiss();
+            }
+        });
+
+        dialogo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogo.show();
     }
 }

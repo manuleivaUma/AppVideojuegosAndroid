@@ -57,8 +57,7 @@ public class ListaUsuario extends AppCompatActivity {
         DbJuego dbJuego = new DbJuego(this);
         Map<String, ArrayList<String>> juegos;
         juegos = dbJuego.getJuegosEstadoValoracion(id);
-        Log.d("Juegos", juegos.toString());
-        if (!m.equals(null)){
+        if (m != null){
             // Juegos obtenidos
             tratarJuegos(juegos);
         } else {
@@ -73,38 +72,43 @@ public class ListaUsuario extends AppCompatActivity {
     private void tratarJuegos(Map<String, ArrayList<String>> m){
         ArrayList<String> nombres = new ArrayList<>();
         ArrayList<String> fotos = new ArrayList<>();
-        ArrayList<String> estado = m.get("listaEstado");
+        ArrayList<String> estado = new ArrayList<>();
         ArrayList<Integer> puntuaciones = new ArrayList<>();
         ArrayList<Integer> valoracion_personal = new ArrayList<>();
         ArrayList<Integer> id_juegos = new ArrayList<>();
 
-        // Tratamos los ArrayList<String>
-        ArrayList<String> idString = m.get("listaId");
-        ArrayList<String> val_personalString = m.get("listaValoracion");
-        for (String id : idString) {
-            id_juegos.add(Integer.parseInt(id));
-        }
-        for (String val : val_personalString) {
-            valoracion_personal.add(Integer.parseInt(val));
+        if (m != null){
+            estado = m.get("listaEstado");
+            final int nJuegos = estado.size();
+            // Tratamos los ArrayList<String>
+            ArrayList<String> idString = m.get("listaId");
+            ArrayList<String> val_personalString = m.get("listaValoracion");
+            for (String id : idString) {
+                id_juegos.add(Integer.parseInt(id));
+            }
+            for (String val : val_personalString) {
+                valoracion_personal.add(Integer.parseInt(val));
+            }
+
+            // Buscamos la información de los juegos
+            ArrayList<String> res;
+            for (Integer id : id_juegos){
+                buscarInformación(id, new CallBack(){
+                    @Override
+                    public void onSuccess(ArrayList<String> detalles){
+                        Log.d("Res", detalles.toString());
+                        nombres.add(detalles.get(0));
+                        Log.d("Res_nombres", nombres.toString());
+                        fotos.add(detalles.get(1));
+                        puntuaciones.add(Integer.parseInt(detalles.get(2)));
+                        if (puntuaciones.size() == nJuegos){
+                            adaptador.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
         }
 
-        // Buscamos la información de los juegos
-        ArrayList<String> res;
-        for (Integer id : id_juegos){
-            buscarInformación(id, new CallBack(){
-                @Override
-                public void onSuccess(ArrayList<String> detalles){
-                    Log.d("Res", detalles.toString());
-                    nombres.add(detalles.get(0));
-                    Log.d("Res_nombres", nombres.toString());
-                    fotos.add(detalles.get(1));
-                    puntuaciones.add(Integer.parseInt(detalles.get(2)));
-                    if (puntuaciones.size() == estado.size()){
-                        adaptador.notifyDataSetChanged();
-                    }
-                }
-            });
-        }
         // Actualizar la listView
         adaptador = new AdaptadorItemsLista(this, nombres, fotos, estado,
                 puntuaciones, valoracion_personal, id_juegos, id);
