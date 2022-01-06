@@ -121,7 +121,7 @@ public class AdaptadorItems extends ArrayAdapter<String> {
             añadir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    añadirJuego(id_usuario, id, "jugando", 0);
+                    añadirJuego(id_usuario, id, "jugando", 0, dialogo);
                 }
             });
         } else {
@@ -132,11 +132,13 @@ public class AdaptadorItems extends ArrayAdapter<String> {
         dialogo.show();
     }
 
-    private void añadirJuego(Integer id_usuario, Integer id_juego, String estado, Integer valoracion){
+    private void añadirJuego(Integer id_usuario, Integer id_juego, String estado,
+                             Integer valoracion, Dialog dialogo){
         DbJuego dbJuego = new DbJuego(context);
         long idQuery = dbJuego.crearJuego(id_usuario, id_juego, estado, valoracion);
         if (idQuery > 0){
             Toast.makeText(context, "¡Juego añadido!", Toast.LENGTH_SHORT).show();
+            dialogo.dismiss();
         } else {
             Toast.makeText(context, "Error al registrar el juego", Toast.LENGTH_SHORT).show();
         }
