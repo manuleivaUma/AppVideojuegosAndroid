@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.Nullable;
 
-import java.time.Clock;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +69,7 @@ public class DbUsuario extends DbHelper {
             values.put("nombre", nombre);
             values.put("apellido", apellido);
 
-            id = db.insert(TABLE_USUARIO, null, values);
+            id = db.insert(DbContract.UsuarioEntry.TABLE_NAME, null, values);
             //Cursor c = db.rawQuery("INSERT INTO t_usuario (email,password,nombre,s) VALUES ('" + email + "' , '"+ password+ "' , '"+ nombre +"' , '"+ apellido +"')",null);
             //id = c.getInt(0);
         } catch (Exception exception) {

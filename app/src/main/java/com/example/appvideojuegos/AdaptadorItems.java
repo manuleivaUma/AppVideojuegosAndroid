@@ -47,7 +47,7 @@ public class AdaptadorItems extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View videojuegoItem = convertView;
-        ViewHolderItems holder = null;
+        ViewHolderItems holder;
         if (videojuegoItem == null){
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             videojuegoItem = layoutInflater.inflate(R.layout.videojuego_item, parent, false);
@@ -89,12 +89,12 @@ public class AdaptadorItems extends ArrayAdapter<String> {
 
         dialogo = new Dialog(this.getContext());
         dialogo.setContentView(R.layout.popup_videojuego);
-        foto = (ImageView) dialogo.findViewById(R.id.imageViewPopup);
-        txNombre = (TextView) dialogo.findViewById(R.id.NombrePopup);
-        txFecha = (TextView) dialogo.findViewById(R.id.FechaPopup);
-        txPuntuacion = (TextView) dialogo.findViewById(R.id.puntuacionPopup);
-        cerrar = (TextView) dialogo.findViewById(R.id.txtclose);
-        añadir = (Button) dialogo.findViewById(R.id.botonPopup);
+        foto = dialogo.findViewById(R.id.imageViewPopup);
+        txNombre = dialogo.findViewById(R.id.NombrePopup);
+        txFecha = dialogo.findViewById(R.id.FechaPopup);
+        txPuntuacion = dialogo.findViewById(R.id.puntuacionPopup);
+        cerrar = dialogo.findViewById(R.id.txtclose);
+        añadir = dialogo.findViewById(R.id.botonPopup);
 
         // Comprobamos si el juego esta en la lista para desactivar el boton
         DbJuego dbJuego = new DbJuego(context);

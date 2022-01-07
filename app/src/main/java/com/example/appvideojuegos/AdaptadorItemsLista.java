@@ -170,7 +170,11 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
                     String[] estados = new String[]{"Completado", "Jugando", "Deseado"};
                     String estado = estados[spEstado.getSelectedItemPosition()];
                     long idQuery = db.editarJuego(id_usuario, id, estado, numero);
-                    Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
+                    if (idQuery < 0) {
+                        Toast.makeText(context, "No se ha podido actualizar", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
+                    }
                     if (context instanceof ListaUsuario){
                         ((ListaUsuario)context).cargarInfo();
                     }
