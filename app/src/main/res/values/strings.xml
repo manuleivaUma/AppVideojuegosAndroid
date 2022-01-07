@@ -37,4 +37,12 @@
     <string name="eliminar">Eliminar</string>
     <string name="añadir">Añadir a la lista</string>
     <string name="actualizar">Actualizar</string>
+    <string name="filtrar_juego">Filtrar</string>
+    <string name="Titulo_filtros">Filtrar resultados:</string>
+    <string name="filtro_nombre">Nombre:</string>
+    <string name="filtro_puntuacion">Puntuación mínima:</string>
+    <string name="filtrar">Filtrar</string>
+    <string name="completado">Completado</string>
+    <string name="deseado">Deseado</string>
+    <string name="jugando">Jugando</string>
 </resources>

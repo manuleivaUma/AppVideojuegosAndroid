@@ -16,9 +16,9 @@
             android:id="@+id/TituloLista"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/lista_juegos"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/lista_juegos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.072"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,5 +42,18 @@
         android:layout_height="match_parent">
 
     </ListView>
+
+    <Button
+        android:id="@+id/buttonfiltrar"
+        android:layout_width="383dp"
+        android:layout_height="wrap_content"
+        android:text="@string/filtrar_juego" />
+
+    <Button
+        android:id="@+id/buttonfiltrar"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:onClick="Refrescar"
+        android:text="@string/actualizar" />
 
 </LinearLayout>

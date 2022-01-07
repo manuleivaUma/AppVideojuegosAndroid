@@ -38,4 +38,12 @@
     <string name="eliminar">Delete</string>
     <string name="añadir">Add to list</string>
     <string name="actualizar">Update</string>
+    <string name="filtrar_juego">Filter</string>
+    <string name="Titulo_filtros">Filter results:</string>
+    <string name="filtro_nombre">Title:</string>
+    <string name="filtro_puntuacion">Minimum score:</string>
+    <string name="filtrar">Filter</string>
+    <string name="completado">Completed</string>
+    <string name="deseado">Wished</string>
+    <string name="jugando">Playing</string>
 </resources>
