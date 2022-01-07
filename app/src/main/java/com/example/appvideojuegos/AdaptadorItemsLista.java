@@ -1,7 +1,9 @@
 package com.example.appvideojuegos;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -31,12 +33,13 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
     ArrayList<Integer> val_personales;
     ArrayList<Integer> id_juegos;
     Integer id_usuario;
+    Boolean switchActivo; // Idioma
 
 
     public AdaptadorItemsLista(Context context, ArrayList<String> nombres, ArrayList<String> fotos,
                                ArrayList<String> estados, ArrayList<Integer> puntuaciones,
                                ArrayList<Integer> val_personal, ArrayList<Integer> id_juegos,
-                               Integer id_usuario){
+                               Integer id_usuario, Boolean switchActivo){
         super(context, R.layout.videojuego_lista_item, R.id.textViewNombre, nombres);
         this.context = context;
         this.fotos = fotos;
@@ -46,6 +49,7 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         this.val_personales = val_personal;
         this.id_juegos = id_juegos;
         this.id_usuario = id_usuario;
+        this.switchActivo = switchActivo;
     }
 
     @Override
@@ -70,7 +74,19 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         holder.nombre.setText(nombres.get(position));
         holder.puntuacion.setText(puntuaciones.get(position).toString());
         holder.val_personal.setText(val_personales.get(position).toString());
-        holder.estado.setText(estados.get(position));
+        // Soporte multi-idioma
+        if (switchActivo){
+            switch (estados.get(position)){
+                case "Jugando" : holder.estado.setText("Playing");
+                                    break;
+                case "Completado" : holder.estado.setText("Finished");
+                                    break;
+                case "Deseado" : holder.estado.setText("Wished");
+                                    break;
+            }
+        } else {
+            holder.estado.setText(estados.get(position));
+        }
         videojuegoItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +102,6 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         TextView cerrar;
         Button eliminar;
         Button actualizar;
-        Boolean eliminado = false;
         ImageView foto;
         TextView txNombre;
         Spinner spEstado;
@@ -112,12 +127,29 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
                 .error(R.mipmap.ic_launcher_round)
                 .into(foto);
         // Spinner
-        String[] estados = {"Completado", "Jugando", "Deseado"};
+        String[] estados = new String[]{"Completado", "Jugando", "Deseado"};
+        if (switchActivo) {
+            estados = new String[]{"Finished", "Playing", "Wished"};
+        }
+
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(context,
                 R.layout.spinner_item, estados);
         adaptador.setDropDownViewResource(R.layout.spinner_item);
         spEstado.setAdapter(adaptador);
-        spEstado.setSelection(adaptador.getPosition(estado));
+        int posAdapter = 0;
+        switch (estado) {
+            case "Jugando":
+                posAdapter = 1;
+                break;
+            case "Completado":
+                posAdapter = 0;
+                break;
+            case "Deseado":
+                posAdapter = 2;
+                break;
+        }
+        spEstado.setSelection(posAdapter);
+
 
         // Cerrar popup
         cerrar.setOnClickListener(new View.OnClickListener() {
@@ -135,8 +167,9 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
                 if (numero >= 0 && numero <= 100){
                     // Actualizar juego
                     DbJuego db = new DbJuego(context);
-                    long idQuery = db.editarJuego(id_usuario, id, spEstado.getSelectedItem().toString(),
-                            numero);
+                    String[] estados = new String[]{"Completado", "Jugando", "Deseado"};
+                    String estado = estados[spEstado.getSelectedItemPosition()];
+                    long idQuery = db.editarJuego(id_usuario, id, estado, numero);
                     Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
                     if (context instanceof ListaUsuario){
                         ((ListaUsuario)context).cargarInfo();
