@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ListaUsuario extends AppCompatActivity {
@@ -49,6 +50,11 @@ public class ListaUsuario extends AppCompatActivity {
         id = Integer.parseInt(mapaid.get("id"));
         boton = this.findViewById(R.id.button2);
 
+        // Cargar info
+        cargarInfo();
+    }
+
+    public void cargarInfo(){
         // Obtenemos la información del usuario
         DbUsuario dbUsuario = new DbUsuario(ListaUsuario.this);
         Map<String,String> m = dbUsuario.getDatosUsuario(id.toString());
@@ -78,6 +84,7 @@ public class ListaUsuario extends AppCompatActivity {
         ArrayList<Integer> id_juegos = new ArrayList<>();
 
         if (m != null){
+            Log.i("Juegos", m.toString());
             estado = m.get("listaEstado");
             final int nJuegos = estado.size();
             // Tratamos los ArrayList<String>
@@ -91,24 +98,34 @@ public class ListaUsuario extends AppCompatActivity {
             }
 
             // Buscamos la información de los juegos
-            ArrayList<String> res;
+            Map<Integer, ArrayList<String>> res = new HashMap<>();
+            // Id - {Nombre - Foto - Valoracion}
             for (Integer id : id_juegos){
+                // Búsqueda asíncrona (no mantiene el orden)
                 buscarInformación(id, new CallBack(){
                     @Override
                     public void onSuccess(ArrayList<String> detalles){
+                        ArrayList<String> listaInfo = new ArrayList<>();
                         Log.d("Res", detalles.toString());
-                        nombres.add(detalles.get(0));
-                        Log.d("Res_nombres", nombres.toString());
-                        fotos.add(detalles.get(1));
-                        puntuaciones.add(Integer.parseInt(detalles.get(2)));
-                        if (puntuaciones.size() == nJuegos){
+                        // Nombre - Foto - Valoración
+                        listaInfo.add(detalles.get(0));
+                        listaInfo.add(detalles.get(1));
+                        listaInfo.add(detalles.get(2));
+                        res.put(id, listaInfo);
+                        // Se ha cargado el último elemento, actualizamos la listView
+                        if (res.size() == nJuegos){
+                            for (Integer id : id_juegos){
+                                // Añadimos a la lista en orden de id
+                                nombres.add(res.get(id).get(0));
+                                fotos.add(res.get(id).get(1));
+                                puntuaciones.add(Integer.parseInt(res.get(id).get(2)));
+                            }
                             adaptador.notifyDataSetChanged();
                         }
                     }
                 });
             }
         }
-
         // Actualizar la listView
         adaptador = new AdaptadorItemsLista(this, nombres, fotos, estado,
                 puntuaciones, valoracion_personal, id_juegos, id);
@@ -140,13 +157,12 @@ public class ListaUsuario extends AppCompatActivity {
         return res;
     }
 
-    public interface CallBack {
-        void onSuccess(ArrayList<String> detalles);
+    public void Refrescar(View view){
+        this.cargarInfo();
     }
 
-    public void Refrescar(View view){
-        adaptador.notifyDataSetChanged();
-        Toast.makeText(this, "Refres", Toast.LENGTH_LONG).show();
+    public interface CallBack {
+        void onSuccess(ArrayList<String> detalles);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){

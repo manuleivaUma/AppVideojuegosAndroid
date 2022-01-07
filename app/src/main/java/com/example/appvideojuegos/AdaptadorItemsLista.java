@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
     ArrayList<Integer> val_personales;
     ArrayList<Integer> id_juegos;
     Integer id_usuario;
+
 
     public AdaptadorItemsLista(Context context, ArrayList<String> nombres, ArrayList<String> fotos,
                                ArrayList<String> estados, ArrayList<Integer> puntuaciones,
@@ -72,7 +75,7 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
             @Override
             public void onClick(View v) {
                 Popup(v, nombres.get(position), fotos.get(position), estados.get(position),
-                        puntuaciones.get(position), val_personales.get(position), id_usuario);
+                        puntuaciones.get(position), val_personales.get(position), id_juegos.get(position));
             }
         });
         return videojuegoItem;
@@ -82,13 +85,15 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
                       Integer val_personal, Integer id){
         TextView cerrar;
         Button eliminar;
+        Button actualizar;
         Boolean eliminado = false;
-
         ImageView foto;
         TextView txNombre;
         Spinner spEstado;
         TextView txPuntuacion;
-        TextView txVal_personal;
+        EditText editVal_personal;
+
+        Toast.makeText(context, "Id: " + id, Toast.LENGTH_SHORT).show();
 
         dialogo = new Dialog(this.getContext());
         dialogo.setContentView(R.layout.popup_lista);
@@ -96,13 +101,14 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         txNombre = dialogo.findViewById(R.id.NombrePopup);
         spEstado = dialogo.findViewById(R.id.spinnerPopup);
         txPuntuacion = dialogo.findViewById(R.id.puntuacionPopup);
-        txVal_personal = dialogo.findViewById(R.id.puntuacionPersonalPopup);
+        editVal_personal = dialogo.findViewById(R.id.puntuacionPersonalPopup);
         cerrar = dialogo.findViewById(R.id.txtclose);
         eliminar = dialogo.findViewById(R.id.botonPopup);
+        actualizar = dialogo.findViewById(R.id.botonActualizarPopup);
 
         txNombre.setText(nombre);
         txPuntuacion.setText(puntuacion.toString());
-        txVal_personal.setText(val_personal.toString());
+        editVal_personal.setText(val_personal.toString());
         Picasso.get()
                 .load(imagen)
                 .error(R.mipmap.ic_launcher_round)
@@ -115,10 +121,45 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         spEstado.setAdapter(adaptador);
         spEstado.setSelection(adaptador.getPosition(estado));
 
+        // Cerrar popup
         cerrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogo.dismiss();
+            }
+        });
+
+        // Boton actualizar
+        actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Actualizar juego
+                DbJuego db = new DbJuego(context);
+                long idQuery = db.editarJuego(id_usuario, id, spEstado.getSelectedItem().toString(),
+                        Integer.parseInt(editVal_personal.getText().toString()));
+                Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
+                if (context instanceof ListaUsuario){
+                    ((ListaUsuario)context).cargarInfo();
+                }
+            }
+        });
+
+        // Boton eliminar
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Borrar juego
+                DbJuego db = new DbJuego(context);
+                long idQuery = db.borrarJuego(id_usuario, id);
+                if (idQuery < 0) {
+                    Toast.makeText(context, "Error al borrar el juego", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Juego eliminado", Toast.LENGTH_SHORT).show();
+                    if (context instanceof ListaUsuario){
+                        ((ListaUsuario)context).cargarInfo();
+                    }
+                    dialogo.dismiss();
+                }
             }
         });
 

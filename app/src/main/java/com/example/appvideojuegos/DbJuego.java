@@ -40,6 +40,8 @@ public class DbJuego extends DbHelper{
     }
 
     public long comprobarJuego(Integer id_usuario, Integer id_juego){
+        // TODO: cambiar todas queries a este formato
+
         long idQuery = -1;
         try {
             DbHelper dbHelper = new DbHelper(context);
@@ -48,8 +50,11 @@ public class DbJuego extends DbHelper{
                     " WHERE usuario_id = '" + id_usuario + "' and juego_id = '" + id_juego +
                     "'", null);
 
-            fila.moveToFirst();
-            idQuery = fila.getInt(0);
+            if (fila.moveToNext()){
+                idQuery = fila.getInt(0);
+            } else {
+                return -1;
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -84,5 +89,38 @@ public class DbJuego extends DbHelper{
         m.put("listaEstado", listaEstado);
         m.put("listaValoracion", listaValoracion);
         return m;
+    }
+
+    public long editarJuego(Integer id_usuario, Integer id_juego, String estado, Integer valoracion){
+        long idQuery = -1;
+        try {
+            DbHelper dbHelper = new DbHelper(context);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("estado", estado);
+            values.put("valoracion", valoracion);
+
+            idQuery = db.update(TABLE_JUEGO, values, "usuario_id = '" + id_usuario +
+                    "' and juego_id = '" + id_juego + "'", null);
+            db.close();
+            dbHelper.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return idQuery;
+    }
+
+    public long borrarJuego(Integer id_usuario, Integer id_juego){
+        long idQuery = -1;
+        try {
+            DbHelper dbHelper = new DbHelper(context);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            idQuery = db.delete(TABLE_JUEGO, "usuario_id = " + id_usuario + " and juego_id = "
+                    + id_juego, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return idQuery;
     }
 }
