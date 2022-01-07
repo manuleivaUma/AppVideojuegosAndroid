@@ -93,8 +93,6 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         TextView txPuntuacion;
         EditText editVal_personal;
 
-        Toast.makeText(context, "Id: " + id, Toast.LENGTH_SHORT).show();
-
         dialogo = new Dialog(this.getContext());
         dialogo.setContentView(R.layout.popup_lista);
         foto = dialogo.findViewById(R.id.imageViewPopup);
@@ -133,13 +131,20 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
         actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Actualizar juego
-                DbJuego db = new DbJuego(context);
-                long idQuery = db.editarJuego(id_usuario, id, spEstado.getSelectedItem().toString(),
-                        Integer.parseInt(editVal_personal.getText().toString()));
-                Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
-                if (context instanceof ListaUsuario){
-                    ((ListaUsuario)context).cargarInfo();
+                Integer numero = Integer.parseInt(editVal_personal.getText().toString());
+                if (numero >= 0 && numero <= 100){
+                    // Actualizar juego
+                    DbJuego db = new DbJuego(context);
+                    long idQuery = db.editarJuego(id_usuario, id, spEstado.getSelectedItem().toString(),
+                            numero);
+                    Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
+                    if (context instanceof ListaUsuario){
+                        ((ListaUsuario)context).cargarInfo();
+                    }
+                } else {
+                    // Número no válido
+                    Toast.makeText(context, "El número debe estar entre los valores 0 y 100",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

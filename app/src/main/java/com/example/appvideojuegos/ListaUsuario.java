@@ -1,6 +1,9 @@
 package com.example.appvideojuegos;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.telecom.Call;
 import android.util.Log;
@@ -9,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,28 +32,30 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ListaUsuario extends AppCompatActivity {
     Map<String,String> mapaid;
     Integer id;
     ListView listaJuegos;
-    Button boton;
     AdaptadorItemsLista adaptador;
+    Switch idioma;
+    Boolean switchActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadLocale();
         setContentView(R.layout.activity_lista_usuario);
 
         mapaid= Collections
                 .singletonMap("key", "Value");
         mapaid = (Map) getIntent().getSerializableExtra("Mapa");
-        Toast.makeText(ListaUsuario.this, mapaid.get("id") , Toast.LENGTH_SHORT).show();
 
         listaJuegos = this.findViewById(R.id.listaJuegos);
         id = Integer.parseInt(mapaid.get("id"));
-        boton = this.findViewById(R.id.button2);
+        switchActivo = getIntent().getBooleanExtra("Ingles", false);
 
         // Cargar info
         cargarInfo();
@@ -157,10 +164,6 @@ public class ListaUsuario extends AppCompatActivity {
         return res;
     }
 
-    public void Refrescar(View view){
-        this.cargarInfo();
-    }
-
     public interface CallBack {
         void onSuccess(ArrayList<String> detalles);
     }
@@ -168,7 +171,29 @@ public class ListaUsuario extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        return true;
+
+        idioma = menu.findItem(R.id.app_bar_switch).getActionView().findViewById(R.id.action_switch);
+        idioma.setChecked(switchActivo);
+        idioma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Boolean ingles;
+                if (isChecked){
+                    cambiarIdioma("en");
+                    ingles = true;
+
+                } else {
+                    cambiarIdioma("es");
+                    ingles = false;
+                }
+                Intent intent = new Intent(ListaUsuario.this, ListaUsuario.class);
+                intent.putExtra("Ingles", ingles);
+                intent.putExtra("Mapa", (Serializable) mapaid);
+                startActivity(intent);
+                finish();
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -187,6 +212,7 @@ public class ListaUsuario extends AppCompatActivity {
     private void mostrarBuscar(){
         Intent intent = new Intent(this, BuscarVideojuego.class);
         intent.putExtra("Mapa", (Serializable) mapaid);
+        intent.putExtra("Ingles", switchActivo);
         startActivity(intent);
         finish();
     }
@@ -194,7 +220,27 @@ public class ListaUsuario extends AppCompatActivity {
     private void mostrarLista(){
         Intent intent = new Intent(this, ListaUsuario.class);
         intent.putExtra("Mapa", (Serializable) mapaid);
+        intent.putExtra("Ingles", switchActivo);
         startActivity(intent);
         finish();
+    }
+
+    private void cambiarIdioma(String lang){
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("Lang", lang);
+        Log.d("Lang_cambiar", lang);
+        editor.apply();
+    }
+
+    public void loadLocale(){
+        SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        String lang = prefs.getString("Lang", "");
+        Log.d("Lang_cargar", lang);
+        cambiarIdioma(lang);
     }
 }

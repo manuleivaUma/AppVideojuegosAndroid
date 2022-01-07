@@ -1,6 +1,7 @@
 package com.example.appvideojuegos;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -47,6 +48,9 @@ public class LoginUsuario extends AppCompatActivity {
             }
         });
 
-
+        // Idioma español por defecto
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("Lang", "es");
+        editor.apply();
     }
 }

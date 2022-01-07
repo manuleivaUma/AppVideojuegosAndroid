@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Lista de Juegos de:"
+            android:text="@string/lista_juegos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.072"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,10 +43,4 @@
 
     </ListView>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="Refrescar"
-        android:text="Recargar" />
 </LinearLayout>

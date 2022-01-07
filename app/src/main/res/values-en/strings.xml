@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AppVideojuegos</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Lista usuario -->
+    <string name="lista_juegos">List of Games:</string>
+
+    <!-- Menu (opciones) -->
+    <string name="lista">My list</string>
+    <string name="buscar_juegos_menu">Search videogames</string>
+
+    <!-- Videojuego_item -->
+    <string name="nota_item">Score:</string>
+    <string name="nombre_item">Name:</string>
+    <string name="fecha_item">Date:</string>
+    <string name="estado_item">State:</string>
+    <string name="nota_lista_item">Personal score:</string>
+
+    <!-- Buscar Videojuegos -->
+    <string name="buscar_juegos">Search games:</string>
+    <string name="nombre_juego_hint">Name</string>
+    <string name="buscar">Search</string>
+    <string name="resBusqueda">Browser results:</string>
+    <string name="juegos_famosos">Famous games:</string>
+
+    <!-- Popup -->
+    <string name="valoracion_popup">Score</string>
+    <string name="valoracion_personal_popup">Personal\n score</string>
+    <string name="eliminar">Delete</string>
+    <string name="añadir">Add to list</string>
+    <string name="actualizar">Update</string>
+</resources>
