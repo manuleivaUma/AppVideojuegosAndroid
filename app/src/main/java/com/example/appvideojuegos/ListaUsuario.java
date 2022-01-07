@@ -1,7 +1,9 @@
 package com.example.appvideojuegos;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,8 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,10 +40,9 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     ListView listaJuegos;
     Button boton, buttonFiltrar;
     AdaptadorItemsLista adaptador;
-    Dialog dialogo;
     String nombre, puntuacion, estadoselec;
-
-    TextView txtViewnombre,txtViewpuntuacion;
+    Switch idioma;
+    Boolean switchActivo;
 
     @Override
     public void applyTexts(String n, String p,String s) {
@@ -57,8 +58,6 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
         System.out.println("Nombre:" + nombre);
         cargarInfo();
     }
-
-    DbJuego dbjuego;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +77,8 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
         id = Integer.parseInt(mapaid.get("id"));
         boton = this.findViewById(R.id.buttonfiltrar);
         buttonFiltrar = this.findViewById(R.id.buttonfiltrar);
+        switchActivo = getIntent().getBooleanExtra("Ingles", false);
+
 
         // Cargar info
         cargarInfo();
@@ -115,37 +116,7 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
 
         TextView text=(TextView)findViewById(R.id.nombreusuario);
         text.setText(m.get("nombre") + " " + m.get("apellido"));
-
     }
-
-    /*public void Popup(View v) {
-        EditText txNombre, txPuntuacion;
-        Button buttonPopup;
-        TextView cerrar;
-
-        dialogo = new Dialog(this);
-        dialogo.setContentView(R.layout.popup_filtro);
-
-        txNombre = dialogo.findViewById(R.id.filtroNombre);
-        txPuntuacion = dialogo.findViewById(R.id.filtroPuntuacion);
-        buttonPopup = dialogo.findViewById(R.id.botonPopup);
-        cerrar = dialogo.findViewById(R.id.txt_close2);
-
-        buttonPopup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dbjuego.filtrarJuegos(txNombre.getText().toString(),txPuntuacion.getText().toString());
-            }
-        });
-
-        cerrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogo.dismiss();
-            }
-        });
-
-    }*/
 
     private void tratarJuegos(Map<String, ArrayList<String>> m){
         ArrayList<String> nombres = new ArrayList<>();
@@ -157,7 +128,6 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
 
         if (m != null){
             Log.i("Juegos", m.toString());
-            //estado = m.get("listaEstado");
             final int nJuegos = estado.size();
             // Tratamos los ArrayList<String>
             ArrayList<String> idString = m.get("listaId");
@@ -273,7 +243,7 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
         }
         // Actualizar la listView
         adaptador = new AdaptadorItemsLista(this, nombres, fotos, estado,
-                puntuaciones, valoracion_personal, id_juegos, id);
+                puntuaciones, valoracion_personal, id_juegos, id, switchActivo);
         listaJuegos.setAdapter(adaptador);
     }
 
@@ -313,6 +283,28 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+
+        idioma = menu.findItem(R.id.app_bar_switch).getActionView().findViewById(R.id.action_switch);
+        idioma.setChecked(switchActivo);
+        idioma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Boolean ingles;
+                if (isChecked){
+                    cambiarIdioma("en");
+                    ingles = true;
+
+                } else {
+                    cambiarIdioma("es");
+                    ingles = false;
+                }
+                Intent intent = new Intent(ListaUsuario.this, ListaUsuario.class);
+                intent.putExtra("Ingles", ingles);
+                intent.putExtra("Mapa", (Serializable) mapaid);
+                startActivity(intent);
+                finish();
+            }
+        });
         return true;
     }
 
@@ -332,6 +324,7 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     private void mostrarBuscar(){
         Intent intent = new Intent(this, BuscarVideojuego.class);
         intent.putExtra("Mapa", (Serializable) mapaid);
+        intent.putExtra("Ingles", switchActivo);
         startActivity(intent);
         finish();
     }
@@ -339,7 +332,27 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     private void mostrarLista(){
         Intent intent = new Intent(this, ListaUsuario.class);
         intent.putExtra("Mapa", (Serializable) mapaid);
+        intent.putExtra("Ingles", switchActivo);
         startActivity(intent);
         finish();
+    }
+
+    private void cambiarIdioma(String lang){
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("Lang", lang);
+        Log.d("Lang_cambiar", lang);
+        editor.apply();
+    }
+
+    public void loadLocale(){
+        SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        String lang = prefs.getString("Lang", "");
+        Log.d("Lang_cargar", lang);
+        cambiarIdioma(lang);
     }
 }
