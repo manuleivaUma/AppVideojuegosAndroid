@@ -43,6 +43,13 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     String nombre, puntuacion, estadoselec;
     private Switch idioma;
 
+    ArrayList<String> nombres;
+    ArrayList<String> fotos;
+    ArrayList<String> estado;
+    ArrayList<Integer> puntuaciones;
+    ArrayList<Integer> valoracion_personal;
+    ArrayList<Integer> id_juegos;
+
     // Objetos compartidos
     private Boolean switchActivo;
     private Map<String,String> mapaid;
@@ -111,7 +118,7 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
             tratarJuegos(juegos);
         } else {
             // Error
-            if(!switchActivo) {
+            if(switchActivo) {
                 Toast.makeText(this, "Error al cargar la lista de juegos", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(this, "Error loading the games list", Toast.LENGTH_SHORT).show();
@@ -123,12 +130,12 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     }
 
     private void tratarJuegos(Map<String, ArrayList<String>> m){
-        ArrayList<String> nombres = new ArrayList<>();
-        ArrayList<String> fotos = new ArrayList<>();
-        ArrayList<String> estado = m != null ? m.get("listaEstado") : new ArrayList<>();
-        ArrayList<Integer> puntuaciones = new ArrayList<>();
-        ArrayList<Integer> valoracion_personal = new ArrayList<>();
-        ArrayList<Integer> id_juegos = new ArrayList<>();
+        nombres = new ArrayList<>();
+        fotos = new ArrayList<>();
+        estado = m != null ? m.get("listaEstado") : new ArrayList<>();
+        puntuaciones = new ArrayList<>();
+        valoracion_personal = new ArrayList<>();
+        id_juegos = new ArrayList<>();
 
         if (m != null){
             Log.i("Juegos", m.toString());
@@ -172,74 +179,46 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
                             int contador = 0;
                             int tamanio = nombres.size();
 
-                            //TODO cambiar a valoracion personal
-                            //TODO poner solo un while
+                            boolean ok1 = false;
+                            boolean ok2 = false;
+                            boolean ok3 = false;
 
                             if(!nombre.equals("")){
+                                ok1 = true;
+                            }
+                            int punt = -1;
+
+                            if(!puntuacion.equals("")){
+                                ok2 = true;
+                                punt = Integer.parseInt(puntuacion);
+                                if(punt > 100){
+                                    punt = 100;
+                                }
+                            }
+
+                            if(!estadoselec.equals("")){
+                                ok3 = true;
+                            }
+
                                while(contador < tamanio){
-                                    if(!nombres.get(contador).toLowerCase(Locale.ROOT).contains(nombre.toLowerCase(Locale.ROOT))){
-                                        System.out.println("Salida" + contador);
-                                        System.out.println("Borrando juego" + nombres.get(contador));
-                                        nombres.remove(contador);
-                                        puntuaciones.remove(contador);
-                                        valoracion_personal.remove(contador);
-                                        fotos.remove(contador);
-                                        id_juegos.remove(contador);
-                                        estado.remove(contador);
+                                    if(ok1 && !nombres.get(contador).toLowerCase(Locale.ROOT).contains(nombre.toLowerCase(Locale.ROOT))){
+                                        borrarlistas(contador);
+                                        tamanio--;
+                                        contador--;
+                                    }else if(ok2 && valoracion_personal.get(contador) < punt){
+                                        borrarlistas(contador);
+                                        tamanio--;
+                                        contador--;
+                                    }else if (ok3 && !estado.get(contador).equals(estadoselec)){
+                                        borrarlistas(contador);
                                         tamanio--;
                                         contador--;
                                     }
                                     contador++;
                                 }
-                            }
-
-                            int contador2 = 0;
-                            int tamanio2 = puntuaciones.size();
-
-                            if(!puntuacion.equals("")){
-                                int punt = Integer.parseInt(puntuacion);
-                                if(punt > 100){
-                                    punt = 100;
-                                }
-                                while(contador2 < tamanio2){
-                                    System.out.println("Salida" + contador2);
-                                    if(puntuaciones.get(contador2) < punt){
-                                        System.out.println("Salida" + contador2);
-                                        System.out.println("Borrando puntuacion" + nombres.get(contador2));
-                                        nombres.remove(contador2);
-                                        puntuaciones.remove(contador2);
-                                        valoracion_personal.remove(contador2);
-                                        fotos.remove(contador2);
-                                        id_juegos.remove(contador2);
-                                        estado.remove(contador2);
-                                        contador2--;
-                                        tamanio2--;
-                                    }
-                                    contador2++;
-                                }
-                            }
-
-                            int contador3 = 0;
-                            int tamanio3 = estado.size();
-
-                            if(!estadoselec.equals("")){
-                                while(contador3 < tamanio3){
-                                    if(!estado.get(contador3).equals(estadoselec)){
-                                        nombres.remove(contador3);
-                                        puntuaciones.remove(contador3);
-                                        valoracion_personal.remove(contador3);
-                                        fotos.remove(contador3);
-                                        id_juegos.remove(contador3);
-                                        estado.remove(contador3);
-                                        contador3--;
-                                        tamanio3--;
-                                    }
-                                    contador3++;
-                                }
-                            }
-
 
                             adaptador.notifyDataSetChanged();
+
                         }
                     }
 
@@ -253,6 +232,16 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
                 puntuaciones, valoracion_personal, id_juegos, id, switchActivo);
         listaJuegos.setAdapter(adaptador);
     }
+
+    private void borrarlistas(int contador) {
+        nombres.remove(contador);
+        puntuaciones.remove(contador);
+        valoracion_personal.remove(contador);
+        fotos.remove(contador);
+        id_juegos.remove(contador);
+        estado.remove(contador);
+    }
+
 
     private ArrayList<String> buscarInformación(Integer id, final CallBack onCallBack){
         ArrayList<String> res = new ArrayList<>(); // nombre - foto - puntuacion
