@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DbJuego extends DbHelper{
-    // TODO : Poner solo un DBHelper
 
     Context context;
 

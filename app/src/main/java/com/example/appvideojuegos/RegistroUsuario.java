@@ -22,8 +22,10 @@ import java.util.Locale;
 public class RegistroUsuario extends AppCompatActivity {
     private EditText txNombre, txPassword, txEmail, txApellido;
     private Button button;
-    Switch idioma;
-    Boolean switchActivo;
+    private Switch idioma;
+
+    // Objetos compartidos
+    private Boolean switchActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,8 @@ public class RegistroUsuario extends AppCompatActivity {
         txEmail = this.findViewById(R.id.editTextTextPersonEmail);
         txApellido = this.findViewById(R.id.editTextTextPersonApellido);
 
-        switchActivo = getIntent().getBooleanExtra("Ingles", false);
+        // Objetos compartidos
+        switchActivo = (Boolean) SingletonMap.getInstance().get(LoginUsuario.SHAREOBJ_ingles);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +64,10 @@ public class RegistroUsuario extends AppCompatActivity {
         txApellido.setText("");
         txEmail.setText("");
         Intent i = new Intent(this,LoginUsuario.class);
-        i.putExtra("Ingles", switchActivo);
         startActivity(i);
     }
 
+    //******************* MENU *******************//
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -84,7 +87,7 @@ public class RegistroUsuario extends AppCompatActivity {
                     ingles = false;
                 }
                 Intent intent = new Intent(RegistroUsuario.this, RegistroUsuario.class);
-                intent.putExtra("Ingles", ingles);
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, ingles);
                 startActivity(intent);
                 finish();
             }
@@ -92,6 +95,7 @@ public class RegistroUsuario extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //******************* IDIOMAS *******************//
     private void cambiarIdioma(String lang){
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);

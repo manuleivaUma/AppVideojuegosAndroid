@@ -34,15 +34,18 @@ import java.util.Locale;
 import java.util.Map;
 
 public class BuscarVideojuego extends AppCompatActivity {
-    Map<String,String> mapaid;
-    Integer id;
 
-    Button button;
-    TextView nombre;
-    ListView listView;
-    ListView listViewRes;
-    Switch idioma;
-    Boolean switchActivo;
+    private Integer id;
+
+    private Button button;
+    private TextView nombre;
+    private ListView listView;
+    private ListView listViewRes;
+    private Switch idioma;
+
+    // Objetos compartidos
+    private Boolean switchActivo;
+    private Map<String,String> mapaid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +53,17 @@ public class BuscarVideojuego extends AppCompatActivity {
         loadLocale();
         setContentView(R.layout.activity_buscar_videojuego);
 
-        mapaid= Collections
-                .singletonMap("key", "Value");
-        mapaid = (Map) getIntent().getSerializableExtra("Mapa");
+        // Objetos compartidos
+        switchActivo = (Boolean) SingletonMap.getInstance().get(LoginUsuario.SHAREOBJ_ingles);
+        mapaid = (Map<String, String>) SingletonMap.getInstance().get(LoginUsuario.SHAREOBJ_mapa);
         id = Integer.parseInt(mapaid.get("id"));
-        switchActivo = getIntent().getBooleanExtra("Ingles", false);
 
         listView = this.findViewById(R.id.listaBuscar);
         listViewRes = this.findViewById(R.id.listaRes);
         button = this.findViewById(R.id.button);
         nombre = this.findViewById(R.id.editTextBuscarJuego);
 
-        // MOSTRAR JUEGOS FAMOSOS
+        // MOSTRAR JUEGOS FAMOSOS 2021
         String url = "https://api.rawg.io/api/games?key=1dbefa6d583c4d62a1be47db82ff82ec&dates=2021-01-01,2021-12-31&ordering=-added&page_size=5";
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -116,15 +118,14 @@ public class BuscarVideojuego extends AppCompatActivity {
         listView.setAdapter(adaptador);
     }
 
-    public void BuscarVideojuego(android.view.View view){
+    // Botón Buscar
+    public void buscarVideojuego(android.view.View view){
         String nombre_juego = this.nombre.getText().toString();
 
         if (nombre_juego == ""){
             Toast.makeText(this, "El nombre del juego está en blanco",
                     Toast.LENGTH_SHORT).show();
         } else {
-            // TODO: Comprobar la entrada
-
             String url = "https://api.rawg.io/api/games?key=1dbefa6d583c4d62a1be47db82ff82ec&search="+nombre_juego;
             StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
@@ -180,6 +181,7 @@ public class BuscarVideojuego extends AppCompatActivity {
         listViewRes.setAdapter(adaptador);
     }
 
+    //******************* MENU *******************//
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -199,8 +201,8 @@ public class BuscarVideojuego extends AppCompatActivity {
                     ingles = false;
                 }
                 Intent intent = new Intent(BuscarVideojuego.this, BuscarVideojuego.class);
-                intent.putExtra("Ingles", ingles);
-                intent.putExtra("Mapa", (Serializable) mapaid);
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, ingles);
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
                 startActivity(intent);
                 finish();
             }
@@ -208,6 +210,7 @@ public class BuscarVideojuego extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // Opciones del menu
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.buscarVideojuego:
@@ -223,20 +226,21 @@ public class BuscarVideojuego extends AppCompatActivity {
 
     private void mostrarBuscar(){
         Intent intent = new Intent(this, BuscarVideojuego.class);
-        intent.putExtra("Mapa", (Serializable) mapaid);
-        intent.putExtra("Ingles", switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
         startActivity(intent);
         finish();
     }
 
     private void mostrarLista(){
         Intent intent = new Intent(this, ListaUsuario.class);
-        intent.putExtra("Mapa", (Serializable) mapaid);
-        intent.putExtra("Ingles", switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
         startActivity(intent);
         finish();
     }
 
+    //******************* IDIOMAS *******************//
     private void cambiarIdioma(String lang){
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);

@@ -25,9 +25,13 @@ import java.util.Map;
 public class LoginUsuario extends AppCompatActivity {
 
     private EditText txPassword, txEmail;
-    Button button1, button2;
-    Switch idioma;
-    Boolean switchActivo;
+    private Button button1, button2;
+    private Switch idioma;
+
+    // Objetos compartidos
+    static String SHAREOBJ_ingles = "Ingles";
+    static String SHAREOBJ_mapa = "Mapa";
+    private Boolean switchActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,32 +41,41 @@ public class LoginUsuario extends AppCompatActivity {
 
         txPassword = this.findViewById(R.id.introducirContrasenia);
         txEmail = this.findViewById(R.id.introducirEmail);
-
         button1 = this.findViewById(R.id.Registrarse);
         button2 = this.findViewById(R.id.Aceptar);
 
-        switchActivo = getIntent().getBooleanExtra("Ingles", false);
+        // Objetos compartidos
+        switchActivo = (Boolean) SingletonMap.getInstance().get(LoginUsuario.SHAREOBJ_ingles);
+        if (switchActivo == null){
+            switchActivo = false;
+            SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, switchActivo);
+        }
 
+        // Creamos BD si no existe
+        DbHelper db = new DbHelper(LoginUsuario.this);
+
+        // Botón Registrarse
         button1.setOnClickListener(v -> {
             Intent i = new Intent(this,RegistroUsuario.class);
-            i.putExtra("Ingles", switchActivo);
             startActivity(i);
         });
 
+        // Botón Login
         button2.setOnClickListener(v -> {
             DbUsuario dbUsuario = new DbUsuario(LoginUsuario.this);
             Map<String,String> mapaid = dbUsuario.buscarUsuario(txEmail.getText().toString(),txPassword.getText().toString());
             if (!mapaid.get("id").equals("-1")){
                 Toast.makeText(LoginUsuario.this, "Usuario válido", Toast.LENGTH_SHORT).show();
                 Intent i2 = new Intent(this,ListaUsuario.class);
-                i2.putExtra("Mapa", (Serializable) mapaid);
-                i2.putExtra("Ingles", switchActivo);
+                Log.d("Id", mapaid.toString());
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
                 startActivity(i2);
             }else{
                 Toast.makeText(LoginUsuario.this, "Usuario no válido", Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Switch elegir idioma
         if (!switchActivo){
             // Idioma español por defecto
             SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
@@ -71,6 +84,7 @@ public class LoginUsuario extends AppCompatActivity {
         }
     }
 
+    //******************* MENU *******************//
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -90,7 +104,7 @@ public class LoginUsuario extends AppCompatActivity {
                     ingles = false;
                 }
                 Intent intent = new Intent(LoginUsuario.this, LoginUsuario.class);
-                intent.putExtra("Ingles", ingles);
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, ingles);
                 startActivity(intent);
                 finish();
             }
@@ -98,6 +112,7 @@ public class LoginUsuario extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //******************* IDIOMAS *******************//
     private void cambiarIdioma(String lang){
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);

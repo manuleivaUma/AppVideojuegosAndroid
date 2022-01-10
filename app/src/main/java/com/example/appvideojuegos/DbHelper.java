@@ -16,13 +16,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + DbContract.UsuarioEntry.TABLE_NAME + "(" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + DbContract.UsuarioEntry.TABLE_NAME + "(" +
                 DbContract.UsuarioEntry.COLUMN_id + " INTEGER PRIMARY KEY ," +
                 DbContract.UsuarioEntry.COLUMN_email + " TEXT NOT NULL UNIQUE," +
                 DbContract.UsuarioEntry.COLUMN_password + " TEXT NOT NULL," +
                 DbContract.UsuarioEntry.COLUMN_nombre + " TEXT NOT NULL," +
                 DbContract.UsuarioEntry.COLUMN_apellido + " TEXT NOT NULL)");
-        db.execSQL("CREATE TABLE " + DbContract.ListaEntry.TABLE_NAME + "(" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + DbContract.ListaEntry.TABLE_NAME + "(" +
                 DbContract.ListaEntry.COLUMN_usuario + " INTEGER NOT NULL, " +
                 DbContract.ListaEntry.COLUMN_juego + " INTEGER NOT NULL, " +
                 DbContract.ListaEntry.COLUMN_estado + " TEXT NOT NULL, " +

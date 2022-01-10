@@ -35,14 +35,17 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ListaUsuario extends AppCompatActivity implements DialogFiltro.DialogFiltroListener {
-    Map<String,String> mapaid;
-    Integer id;
-    ListView listaJuegos;
-    Button boton, buttonFiltrar;
-    AdaptadorItemsLista adaptador;
+
+    private Integer id;
+    private ListView listaJuegos;
+    private Button boton, buttonFiltrar;
+    private AdaptadorItemsLista adaptador;
     String nombre, puntuacion, estadoselec;
-    Switch idioma;
-    Boolean switchActivo;
+    private Switch idioma;
+
+    // Objetos compartidos
+    private Boolean switchActivo;
+    private Map<String,String> mapaid;
 
     @Override
     public void applyTexts(String n, String p,String s) {
@@ -62,23 +65,21 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadLocale();
         setContentView(R.layout.activity_lista_usuario);
 
         nombre = "";
         puntuacion = "";
         estadoselec = "";
 
-        mapaid= Collections
-                .singletonMap("key", "Value");
-        mapaid = (Map) getIntent().getSerializableExtra("Mapa");
-        Toast.makeText(ListaUsuario.this, mapaid.get("id") , Toast.LENGTH_SHORT).show();
+        // Objetos compartidos
+        switchActivo = (Boolean) SingletonMap.getInstance().get(LoginUsuario.SHAREOBJ_ingles);
+        mapaid = (Map<String, String>) SingletonMap.getInstance().get(LoginUsuario.SHAREOBJ_mapa);
 
         listaJuegos = this.findViewById(R.id.listaJuegos);
         id = Integer.parseInt(mapaid.get("id"));
         boton = this.findViewById(R.id.buttonfiltrar);
         buttonFiltrar = this.findViewById(R.id.buttonfiltrar);
-        switchActivo = getIntent().getBooleanExtra("Ingles", false);
-
 
         // Cargar info
         cargarInfo();
@@ -272,14 +273,12 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
         return res;
     }
 
-    public void Refrescar(View view){
-        this.cargarInfo();
-    }
-
+    //******************* INTERFAZ Buscar Información *******************//
     public interface CallBack {
         void onSuccess(ArrayList<String> detalles);
     }
 
+    //******************* MENU *******************//
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -299,8 +298,8 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
                     ingles = false;
                 }
                 Intent intent = new Intent(ListaUsuario.this, ListaUsuario.class);
-                intent.putExtra("Ingles", ingles);
-                intent.putExtra("Mapa", (Serializable) mapaid);
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, ingles);
+                SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
                 startActivity(intent);
                 finish();
             }
@@ -308,6 +307,7 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
         return true;
     }
 
+    // Opciones del menu
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.buscarVideojuego:
@@ -323,20 +323,21 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
 
     private void mostrarBuscar(){
         Intent intent = new Intent(this, BuscarVideojuego.class);
-        intent.putExtra("Mapa", (Serializable) mapaid);
-        intent.putExtra("Ingles", switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
         startActivity(intent);
         finish();
     }
 
     private void mostrarLista(){
         Intent intent = new Intent(this, ListaUsuario.class);
-        intent.putExtra("Mapa", (Serializable) mapaid);
-        intent.putExtra("Ingles", switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_ingles, switchActivo);
+        SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
         startActivity(intent);
         finish();
     }
 
+    //******************* IDIOMAS *******************//
     private void cambiarIdioma(String lang){
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
