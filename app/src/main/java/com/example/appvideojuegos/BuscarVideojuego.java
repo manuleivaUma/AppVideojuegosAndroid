@@ -114,7 +114,7 @@ public class BuscarVideojuego extends AppCompatActivity {
         }
         // Actualizar la listView
         AdaptadorItems adaptador = new AdaptadorItems(this, nombres, fotos, puntuaciones,
-                fechas, id_juegos, id);
+                fechas, id_juegos, id, switchActivo);
         listView.setAdapter(adaptador);
     }
 
@@ -123,8 +123,13 @@ public class BuscarVideojuego extends AppCompatActivity {
         String nombre_juego = this.nombre.getText().toString();
 
         if (nombre_juego == ""){
-            Toast.makeText(this, "El nombre del juego está en blanco",
-                    Toast.LENGTH_SHORT).show();
+            if(!switchActivo) {
+                Toast.makeText(this, "El nombre del juego está en blanco",
+                        Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "No name entered",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             String url = "https://api.rawg.io/api/games?key=1dbefa6d583c4d62a1be47db82ff82ec&search="+nombre_juego;
             StringRequest postRequest = new StringRequest(Request.Method.GET, url,
@@ -177,7 +182,7 @@ public class BuscarVideojuego extends AppCompatActivity {
         }
         // Actualizar la listViewRes
         AdaptadorItems adaptador = new AdaptadorItems(this, nombresRes, fotosRes,
-                puntuacionesRes, fechasRes, id_juegosRes, id);
+                puntuacionesRes, fechasRes, id_juegosRes, id, switchActivo);
         listViewRes.setAdapter(adaptador);
     }
 

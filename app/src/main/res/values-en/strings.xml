@@ -11,6 +11,22 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <!-- Login -->
+    <string name="titulo_login">Login</string>
+    <string name="email_login">Email</string>
+    <string name="pass_login">Password</string>
+    <string name="textoregistro">You dont have an account? Register now!</string>
+    <string name="aceptar">Accept</string>
+    <string name="registrar">Register</string>
+
+    <!-- Registrar -->
+    <string name="titulo_registrar">Register User</string>
+    <string name="email_registro">Email</string>
+    <string name="nombre_registro">Name</string>
+    <string name="apellido_registro">Surname</string>
+    <string name="pass_registro">Password</string>
+    <string name="boton_registro">Register</string>
+
     <!-- Lista usuario -->
     <string name="lista_juegos">List of Games:</string>
 

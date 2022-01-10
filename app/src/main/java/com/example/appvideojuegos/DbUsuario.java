@@ -21,10 +21,22 @@ public class DbUsuario extends DbHelper {
     }
 
     public Map<String, String> buscarUsuario(String email, String password){
+        //TODO aplicar patron singletonMap
+
         int id = -1;
         DbHelper dbHelper = new DbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor fila = db.rawQuery("Select id from t_usuario where email = '" + email + "' and password= '"+ password +"'",null);
+
+        String[] columns = {DbContract.UsuarioEntry.COLUMN_id};
+        String where = DbContract.UsuarioEntry.COLUMN_email + " = ? and " +
+                DbContract.UsuarioEntry.COLUMN_password + " = ?";
+        String[] whereArgs = {
+                email.toString(),
+                password.toString()
+        };
+
+        Cursor fila = db.query(DbContract.UsuarioEntry.TABLE_NAME, columns, where, whereArgs, null,
+                null, null);
 
         if(fila.moveToFirst()){
             id = fila.getInt(0);
@@ -43,9 +55,15 @@ public class DbUsuario extends DbHelper {
 
         DbHelper dbHelper = new DbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int idint = Integer.parseInt(id);
-        //System.out.println(idint);
-        Cursor fila = db.rawQuery("Select email,nombre,apellido from t_usuario where id = '" + idint + "'" ,null);
+
+        String[] columns = {DbContract.UsuarioEntry.COLUMN_email, DbContract.UsuarioEntry.COLUMN_nombre,DbContract.UsuarioEntry.COLUMN_apellido};
+        String where = DbContract.UsuarioEntry.COLUMN_id + " = ? ";
+        String[] whereArgs = {
+                id.toString()
+        };
+
+        Cursor fila = db.query(DbContract.UsuarioEntry.TABLE_NAME, columns, where, whereArgs, null,
+                null, null);
 
         fila.moveToFirst();
 
@@ -59,19 +77,17 @@ public class DbUsuario extends DbHelper {
     public long crearUsuario(String email, String password, String nombre, String apellido){
         long id = -1;
         try {
+
             DbHelper dbHelper = new DbHelper(context);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            int random_int = (int)Math.floor(Math.random()*(999999-(0+1))+0);
             ContentValues values = new ContentValues();
-            values.put("id", random_int);
+
             values.put("email", email);
             values.put("password", password);
             values.put("nombre", nombre);
             values.put("apellido", apellido);
 
             id = db.insert(DbContract.UsuarioEntry.TABLE_NAME, null, values);
-            //Cursor c = db.rawQuery("INSERT INTO t_usuario (email,password,nombre,s) VALUES ('" + email + "' , '"+ password+ "' , '"+ nombre +"' , '"+ apellido +"')",null);
-            //id = c.getInt(0);
         } catch (Exception exception) {
             exception.toString();
         }

@@ -171,17 +171,30 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
                     String estado = estados[spEstado.getSelectedItemPosition()];
                     long idQuery = db.editarJuego(id_usuario, id, estado, numero);
                     if (idQuery < 0) {
-                        Toast.makeText(context, "No se ha podido actualizar", Toast.LENGTH_SHORT).show();
+                        if(!switchActivo) {
+                            Toast.makeText(context, "No se ha podido actualizar", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
+                        if(!switchActivo) {
+                            Toast.makeText(context, "¡Juego actualizado!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(context, "Game updated!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                     if (context instanceof ListaUsuario){
                         ((ListaUsuario)context).cargarInfo();
                     }
                 } else {
                     // Número no válido
-                    Toast.makeText(context, "El número debe estar entre los valores 0 y 100",
-                            Toast.LENGTH_SHORT).show();
+                    if(!switchActivo) {
+                        Toast.makeText(context, "El número debe estar entre los valores 0 y 100",
+                                Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "The number must be between 0 and 100",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -194,9 +207,17 @@ public class AdaptadorItemsLista extends ArrayAdapter<String> {
                 DbJuego db = new DbJuego(context);
                 long idQuery = db.borrarJuego(id_usuario, id);
                 if (idQuery < 0) {
-                    Toast.makeText(context, "Error al borrar el juego", Toast.LENGTH_SHORT).show();
+                    if(!switchActivo) {
+                        Toast.makeText(context, "Error al borrar el juego", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Error deleting the game", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(context, "Juego eliminado", Toast.LENGTH_SHORT).show();
+                    if(!switchActivo) {
+                        Toast.makeText(context, "Juego eliminado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Game deleted", Toast.LENGTH_SHORT).show();
+                    }
                     if (context instanceof ListaUsuario){
                         ((ListaUsuario)context).cargarInfo();
                     }

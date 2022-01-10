@@ -26,7 +26,7 @@ public class RegistroUsuario extends AppCompatActivity {
 
     // Objetos compartidos
     private Boolean switchActivo;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,15 +48,27 @@ public class RegistroUsuario extends AppCompatActivity {
                 DbUsuario dbUsuario = new DbUsuario(RegistroUsuario.this);
                 long id;
                 if(txEmail.getText().toString().equals("") || txNombre.getText().toString().equals("") || txApellido.getText().toString().equals("") || txPassword.getText().toString().equals("")) {
-                    Toast.makeText(RegistroUsuario.this, "No puede haber campos vacíos", Toast.LENGTH_SHORT).show();
+                    if(!switchActivo) {
+                        Toast.makeText(RegistroUsuario.this, "No puede haber campos vacíos", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(RegistroUsuario.this, "There can be no empty fields", Toast.LENGTH_SHORT).show();
+                    }
                 }else {
                     id = dbUsuario.crearUsuario(txEmail.getText().toString(), txPassword.getText().toString(), txNombre.getText().toString(), txApellido.getText().toString());
 
                     if (id > 0){
-                        Toast.makeText(RegistroUsuario.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
+                        if(!switchActivo) {
+                            Toast.makeText(RegistroUsuario.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(RegistroUsuario.this, "User successfully registered", Toast.LENGTH_SHORT).show();
+                        }
                         limpiar();
                     } else {
-                        Toast.makeText(RegistroUsuario.this, "Error al registrar el usuario", Toast.LENGTH_SHORT).show();
+                        if(!switchActivo) {
+                            Toast.makeText(RegistroUsuario.this, "Error al registrar el usuario", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(RegistroUsuario.this, "Error registering the user", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 

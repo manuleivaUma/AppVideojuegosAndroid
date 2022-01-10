@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +31,11 @@ public class AdaptadorItems extends ArrayAdapter<String> {
     ArrayList<Integer> puntuaciones;
     ArrayList<Integer> id_juegos;
     Integer id_usuario;
+    boolean switchActivo;
 
     public AdaptadorItems(Context context, ArrayList<String> nombres, ArrayList<String> fotos,
                           ArrayList<Integer> puntuaciones, ArrayList<String> fechas,
-                          ArrayList<Integer> id_juegos, Integer id_usuario) {
+                          ArrayList<Integer> id_juegos, Integer id_usuario, boolean switchActivo) {
         super(context, R.layout.videojuego_item, R.id.textViewNombre, nombres);
         this.context = context;
         this.fotos = fotos;
@@ -42,6 +44,7 @@ public class AdaptadorItems extends ArrayAdapter<String> {
         this.fechas = fechas;
         this.id_juegos = id_juegos;
         this.id_usuario = id_usuario;
+        this.switchActivo = switchActivo;
     }
 
     @Override
@@ -139,10 +142,18 @@ public class AdaptadorItems extends ArrayAdapter<String> {
         DbJuego dbJuego = new DbJuego(context);
         long idQuery = dbJuego.crearJuego(id_usuario, id_juego, estado, valoracion);
         if (idQuery > 0){
-            Toast.makeText(context, "¡Juego añadido!", Toast.LENGTH_SHORT).show();
+            if(!switchActivo) {
+                Toast.makeText(context, "¡Juego añadido!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "Game added!", Toast.LENGTH_SHORT).show();
+            }
             dialogo.dismiss();
         } else {
-            Toast.makeText(context, "Error al registrar el juego", Toast.LENGTH_SHORT).show();
+            if(!switchActivo) {
+                Toast.makeText(context, "Error al registrar el juego", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "Error registering the game", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

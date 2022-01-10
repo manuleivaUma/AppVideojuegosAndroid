@@ -58,7 +58,6 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
             estadoselec = "";
         }
 
-        System.out.println("Nombre:" + nombre);
         cargarInfo();
     }
 
@@ -87,14 +86,14 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
         buttonFiltrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                openDialog();
+                openDialog(switchActivo);
             }
         });
     }
 
-    private void openDialog() {
+    private void openDialog(Boolean switchActivo) {
         //Abrimos la ventana de filtrado
-        DialogFiltro dialogFiltro = new DialogFiltro();
+        DialogFiltro dialogFiltro = new DialogFiltro(switchActivo);
         dialogFiltro.show(getSupportFragmentManager(),"dialogFiltro");
     }
 
@@ -112,7 +111,11 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
             tratarJuegos(juegos);
         } else {
             // Error
-            Toast.makeText(this, "Error al cargar la lista de juegos", Toast.LENGTH_SHORT).show();
+            if(!switchActivo) {
+                Toast.makeText(this, "Error al cargar la lista de juegos", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "Error loading the games list", Toast.LENGTH_SHORT).show();
+            }
         }
 
         TextView text=(TextView)findViewById(R.id.nombreusuario);
@@ -168,6 +171,9 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
 
                             int contador = 0;
                             int tamanio = nombres.size();
+
+                            //TODO cambiar a valoracion personal
+                            //TODO poner solo un while
 
                             if(!nombre.equals("")){
                                while(contador < tamanio){

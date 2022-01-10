@@ -65,13 +65,21 @@ public class LoginUsuario extends AppCompatActivity {
             DbUsuario dbUsuario = new DbUsuario(LoginUsuario.this);
             Map<String,String> mapaid = dbUsuario.buscarUsuario(txEmail.getText().toString(),txPassword.getText().toString());
             if (!mapaid.get("id").equals("-1")){
-                Toast.makeText(LoginUsuario.this, "Usuario válido", Toast.LENGTH_SHORT).show();
+                if(!switchActivo) {
+                    Toast.makeText(LoginUsuario.this, "Usuario válido", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(LoginUsuario.this, "Correct user", Toast.LENGTH_SHORT).show();
+                }
                 Intent i2 = new Intent(this,ListaUsuario.class);
                 Log.d("Id", mapaid.toString());
                 SingletonMap.getInstance().put(LoginUsuario.SHAREOBJ_mapa, mapaid);
                 startActivity(i2);
             }else{
-                Toast.makeText(LoginUsuario.this, "Usuario no válido", Toast.LENGTH_SHORT).show();
+                if(!switchActivo) {
+                    Toast.makeText(LoginUsuario.this, "Usuario no válido o contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(LoginUsuario.this, "User does not exist or incorrect password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

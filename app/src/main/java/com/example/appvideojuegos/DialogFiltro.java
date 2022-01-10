@@ -20,28 +20,49 @@ public class DialogFiltro extends AppCompatDialogFragment {
     private EditText editTextPuntuacion;
     private DialogFiltroListener listener;
     private Spinner spinner;
+    private boolean switchidioma;
+
+    public DialogFiltro(Boolean switchActivo) {
+        switchidioma = switchActivo;
+    }
 
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.popup_filtro,null);
 
+        String atras = "Atras";
+        String filtrar = "Filtrar";
+
+        String[] arraySpinner = new String[] {
+                "Sin filtro estado", "Completado", "Jugando", "Deseado"
+        };
+
+        if(switchidioma){
+            arraySpinner = new String[]{"No filter", "Finished", "Playing", "Wished"};
+            atras = "Cancel";
+            filtrar = "Filter";
+        }
+
         builder.setView(view)
-                .setTitle("Filtro")
-                .setNegativeButton("Atras", new DialogInterface.OnClickListener() {
+
+                .setNegativeButton(atras, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setPositiveButton("Filtrar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(filtrar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String nombre = editTextTitulo.getText().toString();
                         String puntuacion = editTextPuntuacion.getText().toString();
-                        String estado = spinner.getSelectedItem().toString();
+                        String[] estados = new String[]{"Sin filtro estado", "Completado", "Jugando", "Deseado"};
+                        String estado = estados[spinner.getSelectedItemPosition()];
                         listener.applyTexts(nombre,puntuacion,estado);
                     }
                 });
@@ -49,9 +70,6 @@ public class DialogFiltro extends AppCompatDialogFragment {
         editTextPuntuacion = view.findViewById(R.id.filtroPuntuacion);
         spinner = view.findViewById(R.id.spinner2);
 
-        String[] arraySpinner = new String[] {
-                "Sin filtro estado", "Completado", "Jugando", "Deseado"
-        };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item,arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
