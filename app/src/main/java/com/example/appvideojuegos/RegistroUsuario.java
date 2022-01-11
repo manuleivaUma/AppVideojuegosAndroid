@@ -88,7 +88,7 @@ public class RegistroUsuario extends AppCompatActivity {
     //******************* MENU *******************//
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_login, menu);
 
         idioma = menu.findItem(R.id.app_bar_switch).getActionView().findViewById(R.id.action_switch);
         idioma.setChecked(switchActivo);
