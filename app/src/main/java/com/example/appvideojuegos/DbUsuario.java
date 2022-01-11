@@ -21,7 +21,6 @@ public class DbUsuario extends DbHelper {
     }
 
     public Map<String, String> buscarUsuario(String email, String password){
-        //TODO aplicar patron singletonMap
 
         int id = -1;
         DbHelper dbHelper = new DbHelper(context);
