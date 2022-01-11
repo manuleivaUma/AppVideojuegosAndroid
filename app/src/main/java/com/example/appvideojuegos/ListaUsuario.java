@@ -186,14 +186,9 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
                             if(!nombre.equals("")){
                                 ok1 = true;
                             }
-                            int punt = -1;
 
                             if(!puntuacion.equals("")){
                                 ok2 = true;
-                                punt = Integer.parseInt(puntuacion);
-                                if(punt > 100){
-                                    punt = 100;
-                                }
                             }
 
                             if(!estadoselec.equals("")){
@@ -205,7 +200,7 @@ public class ListaUsuario extends AppCompatActivity implements DialogFiltro.Dial
                                         borrarlistas(contador);
                                         tamanio--;
                                         contador--;
-                                    }else if(ok2 && valoracion_personal.get(contador) < punt){
+                                    }else if(ok2 && valoracion_personal.get(contador) < Integer.parseInt(puntuacion)){
                                         borrarlistas(contador);
                                         tamanio--;
                                         contador--;

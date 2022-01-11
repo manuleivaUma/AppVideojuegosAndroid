@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,7 +64,23 @@ public class DialogFiltro extends AppCompatDialogFragment {
                         String puntuacion = editTextPuntuacion.getText().toString();
                         String[] estados = new String[]{"Sin filtro estado", "Completado", "Jugando", "Deseado"};
                         String estado = estados[spinner.getSelectedItemPosition()];
-                        listener.applyTexts(nombre,puntuacion,estado);
+
+                        int puntos = 0;
+
+                        if(!puntuacion.equals("")){
+                            puntos = Integer.parseInt(puntuacion);
+                        }
+
+                        if(puntos <= 100) {
+                            listener.applyTexts(nombre,puntuacion,estado);
+                        }else{
+                            if(!switchidioma) {
+                                Toast.makeText(getContext(), "El filtro de valoración personal debe estar entre 0 y 100", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getContext(), "The user rating filter must be a value between 0 and 100", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     }
                 });
         editTextTitulo = view.findViewById(R.id.filtroNombre);
